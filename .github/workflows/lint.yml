@@ -5,8 +5,8 @@ on:
 
 name: Lint
 jobs:
-  gofmt:
-    name: gofmt
+  gofmt-not-working:
+    name: gofmt-not-working
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -19,6 +19,24 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version-file: go.mod
+
+      - name: Check Go Format
+        run: if [ "$(gofmt -s -l . | wc -l)" -gt 0 ]; then exit 1; fi
+
+  gofmt-working:
+    name: gofmt-working
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version-file: backend/go.mod
 
       - name: Check Go Format
         run: if [ "$(gofmt -s -l . | wc -l)" -gt 0 ]; then exit 1; fi
